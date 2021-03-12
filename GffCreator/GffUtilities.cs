@@ -22,15 +22,15 @@ namespace GffCreator
             int end   = exon.End;
 
             if (start < codingRegion.Start) start = codingRegion.Start;
-            if (end   > codingRegion.End)   end   = codingRegion.End;
+            if (end   > codingRegion.End) end     = codingRegion.End;
 
             return new Interval(start, end);
         }
 
         public static bool HasUtr(IInterval codingRegion, IInterval exon)
         {
-            if (codingRegion == null || codingRegion.Start == -1 || codingRegion.End == -1) return false;
-            return exon.Start < codingRegion.Start || exon.End > codingRegion.End;
+            if (codingRegion  == null              || codingRegion.Start == -1 || codingRegion.End == -1) return false;
+            return exon.Start < codingRegion.Start || exon.End           > codingRegion.End;
         }
 
         public static IEnumerable<ITranscriptRegion> GetExons(this ITranscriptRegion[] regions) =>
@@ -43,12 +43,12 @@ namespace GffCreator
         {
             if (exons.Count == 1) return exons;
 
-            var mergedExons = new List<ITranscriptRegion>();
-            var exonsById   = exons.GetMultiValueDict(x => x.Id);
+            var                                         mergedExons = new List<ITranscriptRegion>();
+            Dictionary<ushort, List<ITranscriptRegion>> exonsById   = exons.GetMultiValueDict(x => x.Id);
 
-            foreach (var kvp in exonsById)
+            foreach ((ushort exonId, List<ITranscriptRegion> transcriptRegions) in exonsById)
             {
-                mergedExons.Add(MergeTranscriptRegions(kvp.Key, kvp.Value));
+                mergedExons.Add(MergeTranscriptRegions(exonId, transcriptRegions));
             }
 
             return mergedExons;

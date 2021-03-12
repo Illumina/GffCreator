@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GffCreator.GFF;
+using GffCreator.Mutable;
 using Intervals;
 using VariantAnnotation.Interface.AnnotatedPositions;
 
@@ -8,57 +8,42 @@ namespace GffCreator
 {
     public sealed class OutputPipeline
     {
-        private readonly IDictionary<IGene, int> _geneToInternalId;
-        private readonly GffWriter               _writer;
-        private readonly HashSet<int>            _observedGenes;
+        private readonly GffWriter    _writer;
+        private readonly HashSet<int> _observedGenes = new();
 
-        public OutputPipeline(GffWriter writer, IDictionary<IGene, int> geneToInternalId)
+        public OutputPipeline(GffWriter writer) => _writer = writer;
+
+        public void Create(IEnumerable<MutableTranscript> transcripts)
         {
-            _writer           = writer;
-            _geneToInternalId = geneToInternalId;
-            _observedGenes    = new HashSet<int>();
+            foreach (MutableTranscript transcript in transcripts) Write(transcript);
         }
 
-        public void Create(IEnumerable<IntervalArray<ITranscript>> transcriptIntervalArrays)
+        private void Write(MutableTranscript transcript)
         {
-            Console.Write("- writing GFF entries... ");
-            foreach (var transcriptArray in transcriptIntervalArrays)
-            {
-                if (transcriptArray == null) continue;
-                foreach (var interval in transcriptArray.Array) Write(interval.Value);
-            }
+            GffFields         requiredFields = GetRequiredFields(transcript);
+            GeneralAttributes attributes     = GetGeneralAttributes(transcript);
 
-            Console.WriteLine("finished.");
-        }
-
-        private void Write(ITranscript transcript)
-        {
-            var requiredFields = GetRequiredFields(transcript);
-            var attributes     = GetGeneralAttributes(transcript);
-
-            WriteGene(transcript.Gene, requiredFields, attributes.GeneId, attributes.InternalGeneId);
+            WriteGene(transcript.Gene, requiredFields, transcript.Source);
             WriteTranscript(transcript, requiredFields, attributes);
 
-            var exons        = transcript.TranscriptRegions.GetExons();
-            var codingRegion = transcript.Translation?.CodingRegion;
+            IEnumerable<ITranscriptRegion> exons        = transcript.TranscriptRegions.GetExons();
+            ICodingRegion                  codingRegion = transcript.Translation?.CodingRegion;
 
-            foreach (var exon in exons) WriteExon(exon, requiredFields, attributes, codingRegion);
+            foreach (ITranscriptRegion exon in exons) WriteExon(exon, requiredFields, attributes, codingRegion);
         }
 
-        private void WriteTranscript(IInterval          interval, IRequiredFields requiredFields,
-                                     IGeneralAttributes attributes) =>
+        private void WriteTranscript(IInterval interval, GffFields requiredFields, GeneralAttributes attributes) =>
             _writer.WriteTranscript(interval, requiredFields, attributes);
 
-        private void WriteGene(IGene gene, IRequiredFields requiredFields, string geneId, int internalGeneId)
+        private void WriteGene(MutableGene gene, GffFields requiredFields, Source source)
         {
-            if (_observedGenes.Contains(internalGeneId)) return;
-
-            _observedGenes.Add(internalGeneId);
-            var gffGene = GetGene(gene, geneId);
-            _writer.WriteGene(gffGene, requiredFields, internalGeneId);
+            if (_observedGenes.Contains(gene.InternalGeneId)) return;
+            _observedGenes.Add(gene.InternalGeneId);
+            
+            _writer.WriteGene(gene, requiredFields, source);
         }
 
-        private void WriteExon(ITranscriptRegion exon, IRequiredFields requiredFields, IGeneralAttributes attributes,
+        private void WriteExon(ITranscriptRegion exon, GffFields requiredFields, GeneralAttributes attributes,
                                IInterval         codingRegion)
         {
             _writer.WriteExonicRegion(exon, requiredFields, attributes, exon.Id, "exon");
@@ -66,57 +51,54 @@ namespace GffCreator
             WriteUtr(codingRegion, exon, requiredFields, attributes);
         }
 
-        private void WriteUtr(IInterval          codingRegion, ITranscriptRegion exon, IRequiredFields requiredFields,
-                              IGeneralAttributes attributes)
+        private void WriteUtr(IInterval         codingRegion, ITranscriptRegion exon, GffFields requiredFields,
+                              GeneralAttributes attributes)
         {
             if (!GffUtilities.HasUtr(codingRegion, exon)) return;
             if (exon.Start < codingRegion.Start) Write5PrimeUtr(codingRegion, exon, requiredFields, attributes);
             if (exon.End   > codingRegion.End) Write3PrimeUtr(codingRegion, exon, requiredFields, attributes);
         }
 
-        private void Write5PrimeUtr(IInterval codingRegion, ITranscriptRegion exon, IRequiredFields requiredFields,
-                                    IGeneralAttributes attributes)
+        private void Write5PrimeUtr(IInterval         codingRegion, ITranscriptRegion exon, GffFields requiredFields,
+                                    GeneralAttributes attributes)
         {
             int utrEnd                    = codingRegion.Start - 1;
             if (utrEnd > exon.End) utrEnd = exon.End;
             _writer.WriteExonicRegion(new Interval(exon.Start, utrEnd), requiredFields, attributes, exon.Id, "UTR");
         }
 
-        private void Write3PrimeUtr(IInterval codingRegion, ITranscriptRegion exon, IRequiredFields requiredFields,
-                                    IGeneralAttributes attributes)
+        private void Write3PrimeUtr(IInterval         codingRegion, ITranscriptRegion exon, GffFields requiredFields,
+                                    GeneralAttributes attributes)
         {
             int utrStart                        = codingRegion.End + 1;
             if (utrStart < exon.Start) utrStart = exon.Start;
             _writer.WriteExonicRegion(new Interval(utrStart, exon.End), requiredFields, attributes, exon.Id, "UTR");
         }
 
-        private void WriteCds(IInterval          codingRegion, ITranscriptRegion exon, IRequiredFields requiredFields,
-                              IGeneralAttributes attributes)
+        private void WriteCds(IInterval         codingRegion, ITranscriptRegion exon, GffFields requiredFields,
+                              GeneralAttributes attributes)
         {
             if (!GffUtilities.HasCds(codingRegion, exon)) return;
-            var cds = GffUtilities.GetCdsCoordinates(codingRegion, exon);
+            IInterval cds = GffUtilities.GetCdsCoordinates(codingRegion, exon);
             _writer.WriteExonicRegion(cds, requiredFields, attributes, exon.Id, "CDS");
         }
 
-        private static IGffGene GetGene(IGene gene, string id) => new GffGene(gene.Start, gene.End, id,
-            gene.EntrezGeneId.WithVersion, gene.EnsemblId.WithVersion, gene.Symbol);
-
-        private static IRequiredFields GetRequiredFields(ITranscript transcript)
+        private static GffFields GetRequiredFields(MutableTranscript transcript)
         {
-            string source = transcript.Source.ToString();
-            return new RequiredFields(transcript.Chromosome.UcscName, source, transcript.Gene.OnReverseStrand);
+            var source = transcript.Source.ToString();
+            return new GffFields(transcript.Chromosome.UcscName, source, transcript.Start, transcript.End, transcript.Gene.OnReverseStrand);
         }
 
-        private IGeneralAttributes GetGeneralAttributes(ITranscript transcript)
+        private static GeneralAttributes GetGeneralAttributes(MutableTranscript transcript)
         {
-            string bioType        = GetBioType(transcript.BioType);
-            int    internalGeneId = _geneToInternalId[transcript.Gene];
+            string bioType = GetBioType(transcript.BioType);
+
             string geneId = transcript.Source == Source.Ensembl
                 ? transcript.Gene.EnsemblId.WithVersion
                 : transcript.Gene.EntrezGeneId.WithVersion;
 
             return new GeneralAttributes(geneId, transcript.Gene.Symbol, transcript.Id.WithVersion,
-                transcript.Translation?.ProteinId?.WithVersion, bioType, transcript.IsCanonical, internalGeneId);
+                transcript.Translation?.ProteinId?.WithVersion, bioType, transcript.IsCanonical, transcript.Gene.InternalGeneId);
         }
 
         private static string GetBioType(BioType bioType) => bioType == BioType.three_prime_overlapping_ncRNA

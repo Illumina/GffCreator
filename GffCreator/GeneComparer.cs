@@ -3,10 +3,12 @@ using VariantAnnotation.Interface.AnnotatedPositions;
 
 namespace GffCreator
 {
-    public class GeneComparer: EqualityComparer<IGene>
+    public class GeneComparer : EqualityComparer<IGene>
     {
         public override bool Equals(IGene x, IGene y)
         {
+            if (x == null || y == null) return false;
+
             return x.Start                    == y.Start                    &&
                    x.End                      == y.End                      &&
                    x.Chromosome.Index         == y.Chromosome.Index         &&

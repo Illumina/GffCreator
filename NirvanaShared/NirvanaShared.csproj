@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.1</TargetFramework>
+        <TargetFramework>net5.0</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<OutputPath>..\bin\$(Configuration)</OutputPath>
-    </PropertyGroup>	
+    </PropertyGroup>
     <ItemGroup>
 		<Compile Include="..\Nirvana\CacheUtils\Genes\Utilities\DictionaryUtilities.cs" Link="CacheUtils\DictionaryUtilities.cs" />
 		<Compile Include="..\Nirvana\Compression\Algorithms\ICompressionAlgorithm.cs" Link="Compression\ICompressionAlgorithm.cs" />
