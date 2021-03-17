@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using GffCreator;
 using GffCreator.GFF;
 using GffCreator.Mutable;
+using GffCreator.Utilities;
 using UnitTests.Resources;
 using VariantAnnotation.AnnotatedPositions.Transcript;
 using VariantAnnotation.Caches.DataStructures;
@@ -19,11 +19,11 @@ namespace UnitTests
 
         public OutputPipelineTests()
         {
-            IEnumerable<MutableTranscript> transcripts = GetRefSeqTranscripts();
-            _gffLines = WriteGffAndGetOutput(transcripts);
+            MutableTranscript transcript = GetRefSeqTranscript();
+            _gffLines = WriteGffAndGetOutput(new List<MutableTranscript> {transcript});
         }
-        
-        private static IEnumerable<MutableTranscript> GetRefSeqTranscripts()
+
+        private static MutableTranscript GetRefSeqTranscript()
         {
             CompactId transcriptId  = CompactId.Convert("NM_123456", 7);
             CompactId entrezGeneId  = CompactId.Convert("1234");
@@ -49,10 +49,8 @@ namespace UnitTests
                 new TranscriptRegion(TranscriptRegionType.Exon,   6, 2405, 2804, 1001, 1400) // 3' UTR
             };
 
-            var transcript = new MutableTranscript(gene.Chromosome, 1001, 2804, transcriptId, translation,
+            return new MutableTranscript(gene.Chromosome, 1001, 2804, transcriptId, translation,
                 BioType.protein_coding, gene, true, transcriptRegions, Source.RefSeq);
-
-            return new[] {transcript};
         }
 
         [Fact]
@@ -121,7 +119,7 @@ namespace UnitTests
             Assert.Equal("1234",            attributes["gene_id"]);
             Assert.Equal("1234",            attributes["entrez_gene_id"]);
             Assert.Equal("ENSG00000123456", attributes["ensembl_gene_id"]);
-            Assert.Equal("ABC",            attributes["gene_name"]);
+            Assert.Equal("ABC",             attributes["gene_name"]);
             Assert.Equal("9",               attributes["internal_gene_id"]);
         }
 
@@ -132,7 +130,7 @@ namespace UnitTests
 
             Assert.Equal(7,                attributes.Count);
             Assert.Equal("1234",           attributes["gene_id"]);
-            Assert.Equal("ABC",           attributes["gene_name"]);
+            Assert.Equal("ABC",            attributes["gene_name"]);
             Assert.Equal("NM_123456.7",    attributes["transcript_id"]);
             Assert.Equal("protein_coding", attributes["transcript_type"]);
             Assert.Equal("canonical",      attributes["tag"]);
@@ -151,7 +149,7 @@ namespace UnitTests
 
             attributes = GetAttributes(_gffLines[13]);
             CheckExonicAttributes(attributes, "5");
-            
+
             attributes = GetAttributes(_gffLines[15]);
             CheckExonicAttributes(attributes, "6");
         }
@@ -177,10 +175,10 @@ namespace UnitTests
 
             attributes = GetAttributes(_gffLines[8]);
             CheckExonicAttributes(attributes, "3");
-            
+
             attributes = GetAttributes(_gffLines[10]);
             CheckExonicAttributes(attributes, "4");
-            
+
             attributes = GetAttributes(_gffLines[12]);
             CheckExonicAttributes(attributes, "5");
         }
@@ -207,26 +205,35 @@ namespace UnitTests
             CheckExonicAttributes(attributes, "6");
         }
 
-        private static List<string> WriteGffAndGetOutput(IEnumerable<MutableTranscript> transcripts)
+        [Fact]
+        public void WriteGene_PreventDuplicateGeneEntries()
         {
-            using var ms = new MemoryStream();
-            using (var writer = new GffWriter(new StreamWriter(ms, Encoding.UTF8, 1024, true)))
-            {
-                var output = new OutputPipeline(writer);
-                output.Create(transcripts);
-            }
+            MutableTranscript transcript = GetRefSeqTranscript();
+            List<string>      gffLines   = WriteGffAndGetOutput(new List<MutableTranscript> {transcript, transcript});
+
+            var geneFeature    = GffFeature.gene.ToString();
+            int numGeneEntries = gffLines.Select(line => line.Split('\t')).Count(cols => cols[2] == geneFeature);
+
+            Assert.Equal(1, numGeneEntries);
+        }
+
+        private static List<string> WriteGffAndGetOutput(List<MutableTranscript> transcripts)
+        {
+            using var ms           = new MemoryStream();
+            using var streamWriter = new StreamWriter(ms, Encoding.UTF8, 1024, true);
+
+            transcripts.WriteGff(streamWriter);
 
             ms.Position = 0;
             var gffLines = new List<string>();
 
-            using (var reader = new StreamReader(ms))
+            using var reader = new StreamReader(ms);
+            
+            while (true)
             {
-                while (true)
-                {
-                    string line = reader.ReadLine();
-                    if (line == null) break;
-                    gffLines.Add(line);
-                }
+                string line = reader.ReadLine();
+                if (line == null) break;
+                gffLines.Add(line);
             }
 
             return gffLines;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Compression.Utilities;
-using GffCreator.GFF;
 using GffCreator.Mutable;
 using GffCreator.Utilities;
 using Intervals;
@@ -37,7 +36,10 @@ namespace GffCreator
             }
 
             List<MutableTranscript> transcripts = LoadCache(transcriptCachePath, referencePath, source);
-            transcripts.WriteGff(outputPath);
+            
+            Console.Write("- writing GFF entries... ");
+            transcripts.WriteGff(GZipUtilities.GetStreamWriter(outputPath));
+            Console.WriteLine("finished.");
         }
 
         private static List<MutableTranscript> LoadCache(string cachePath, string referencePath, Source source)
@@ -67,16 +69,6 @@ namespace GffCreator
             Console.WriteLine($"{numTranscriptsUpdated} transcripts & {numGenesUpdated} genes updated.");
 
             return transcripts;
-        }
-
-        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private static void WriteGff(this List<MutableTranscript> transcripts, string outputPath)
-        {
-            Console.Write("- writing GFF entries... ");
-            using var writer = new GffWriter(GZipUtilities.GetStreamWriter(outputPath));
-            var       output = new OutputPipeline(writer);
-            output.Create(transcripts);
-            Console.WriteLine("finished.");
         }
     }
 }
