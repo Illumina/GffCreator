@@ -13,6 +13,7 @@ namespace GffCreator.Mutable
         public string      Symbol          { get; }
         public ICompactId  EntrezGeneId    { get; }
         public ICompactId  EnsemblId       { get; }
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public int         HgncId          { get; }
 
         public readonly int InternalGeneId;

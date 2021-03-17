@@ -69,6 +69,7 @@ namespace GffCreator
             return transcripts;
         }
 
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
         private static void WriteGff(this List<MutableTranscript> transcripts, string outputPath)
         {
             Console.Write("- writing GFF entries... ");

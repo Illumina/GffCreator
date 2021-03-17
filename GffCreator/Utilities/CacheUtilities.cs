@@ -8,6 +8,7 @@ namespace GffCreator.Utilities
 {
     public static class CacheUtilities
     {
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Global
         public static List<MutableTranscript> FilterBySource(IntervalArray<ITranscript>[] transcriptsByRef,
                                                              Source                       desiredSource,
                                                              Dictionary<IGene, int>       geneToInternalId)
@@ -50,6 +51,7 @@ namespace GffCreator.Utilities
         private static MutableGene GetGene(IGene g, int internalGeneId) => new(g.Chromosome, g.Start, g.End, g.OnReverseStrand, g.Symbol,
             g.EntrezGeneId, g.EnsemblId, internalGeneId);
 
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Global
         public static (int NumTranscriptsUpdated, int NumGenesUpdated) FixTranscripts(
             List<MutableTranscript> transcripts)
         {
