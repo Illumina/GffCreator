@@ -19,11 +19,11 @@ namespace UnitTests
 
         public OutputPipelineTests()
         {
-            MutableTranscript[] transcripts = GetRefSeqTranscripts();
+            IEnumerable<MutableTranscript> transcripts = GetRefSeqTranscripts();
             _gffLines = WriteGffAndGetOutput(transcripts);
         }
         
-        private static MutableTranscript[] GetRefSeqTranscripts()
+        private static IEnumerable<MutableTranscript> GetRefSeqTranscripts()
         {
             CompactId transcriptId  = CompactId.Convert("NM_123456", 7);
             CompactId entrezGeneId  = CompactId.Convert("1234");
@@ -207,7 +207,7 @@ namespace UnitTests
             CheckExonicAttributes(attributes, "6");
         }
 
-        private static List<string> WriteGffAndGetOutput(MutableTranscript[] transcripts)
+        private static List<string> WriteGffAndGetOutput(IEnumerable<MutableTranscript> transcripts)
         {
             using var ms = new MemoryStream();
             using (var writer = new GffWriter(new StreamWriter(ms, Encoding.UTF8, 1024, true)))

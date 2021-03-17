@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GffCreator;
 using GffCreator.Utilities;
 using Intervals;
 using VariantAnnotation.Caches.DataStructures;

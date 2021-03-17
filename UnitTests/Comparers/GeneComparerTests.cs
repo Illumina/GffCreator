@@ -1,5 +1,4 @@
-﻿using GffCreator;
-using GffCreator.Comparers;
+﻿using GffCreator.Comparers;
 using UnitTests.Resources;
 using Xunit;
 

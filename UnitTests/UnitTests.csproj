@@ -20,4 +20,8 @@
       <ProjectReference Include="..\NirvanaShared\NirvanaShared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="GFF" />
+    </ItemGroup>
+
 </Project>

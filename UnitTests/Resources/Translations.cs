@@ -2,6 +2,7 @@
 using VariantAnnotation.Caches.DataStructures;
 using VariantAnnotation.Interface.AnnotatedPositions;
 
+// ReSharper disable InconsistentNaming
 namespace UnitTests.Resources
 {
     public static class Translations

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using GffCreator;
 using GffCreator.Utilities;
 using UnitTests.Resources;
 using VariantAnnotation.Interface.AnnotatedPositions;
