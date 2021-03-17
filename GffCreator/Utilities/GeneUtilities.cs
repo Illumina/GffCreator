@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using GffCreator.Comparers;
 using VariantAnnotation.Interface.AnnotatedPositions;
 
-namespace GffCreator
+namespace GffCreator.Utilities
 {
-    public static class InternalGenes
+    public static class GeneUtilities
     {
         public static Dictionary<IGene, int> CreateDictionary(IGene[] genes)
         {

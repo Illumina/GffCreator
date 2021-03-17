@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Genome;
+﻿using Genome;
 
 namespace VariantAnnotation.Interface.AnnotatedPositions
 {

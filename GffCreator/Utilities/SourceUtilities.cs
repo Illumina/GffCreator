@@ -8,8 +8,7 @@ namespace GffCreator.Utilities
         {
             source = source.ToLower();
             if (source.StartsWith("ensembl")) return Source.Ensembl;
-            if (source.StartsWith("refseq")) return Source.RefSeq;
-            return source.StartsWith("both") ? Source.BothRefSeqAndEnsembl : Source.None;
+            return source.StartsWith("refseq") ? Source.RefSeq : Source.None;
         }
     }
 }

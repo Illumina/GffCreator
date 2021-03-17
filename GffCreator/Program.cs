@@ -20,15 +20,15 @@ namespace GffCreator
         {
             if (args.Length != 4)
             {
-                Console.WriteLine("USAGE: {0} <transcript source> <cache prefix> <reference path> <output GFF path>",
+                Console.WriteLine("USAGE: {0} <transcript source> <transcript cache path> <reference path> <output GFF path>",
                     Path.GetFileName(Environment.GetCommandLineArgs()[0]));
                 Environment.Exit(1);
             }
 
-            Source source        = SourceUtilities.GetSource(args[0]);
-            string cachePrefix   = args[1];
-            string referencePath = args[2];
-            string outputPath    = args[3];
+            Source source              = SourceUtilities.GetSource(args[0]);
+            string transcriptCachePath = args[1];
+            string referencePath       = args[2];
+            string outputPath          = args[3];
 
             if (!outputPath.EndsWith(".gff.gz"))
             {
@@ -36,9 +36,7 @@ namespace GffCreator
                 Environment.Exit(1);
             }
 
-            string cachePath = CacheConstants.TranscriptPath(cachePrefix);
-
-            List<MutableTranscript> transcripts = LoadCache(cachePath, referencePath, source);
+            List<MutableTranscript> transcripts = LoadCache(transcriptCachePath, referencePath, source);
             transcripts.WriteGff(outputPath);
         }
 
@@ -56,7 +54,7 @@ namespace GffCreator
             {
                 TranscriptCacheData cacheData = reader.Read(sequenceProvider, sequenceProvider.RefIndexToChromosome);
                 transcriptsByRef = cacheData.TranscriptIntervalArrays;
-                geneToInternalId = InternalGenes.CreateDictionary(cacheData.Genes);
+                geneToInternalId = GeneUtilities.CreateDictionary(cacheData.Genes);
             }
             Console.WriteLine("finished.");
             

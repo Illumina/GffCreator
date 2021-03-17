@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using VariantAnnotation.Interface.AnnotatedPositions;
 
-namespace GffCreator
+namespace GffCreator.Comparers
 {
     public class GeneComparer : EqualityComparer<IGene>
     {

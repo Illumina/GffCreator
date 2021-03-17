@@ -6,7 +6,7 @@ using Intervals;
 using VariantAnnotation.Caches.DataStructures;
 using VariantAnnotation.Interface.AnnotatedPositions;
 
-namespace GffCreator
+namespace GffCreator.Utilities
 {
     public static class GffUtilities
     {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GffCreator.Comparers;
 using GffCreator.Mutable;
 using Intervals;
 using VariantAnnotation.Interface.AnnotatedPositions;
@@ -53,7 +54,7 @@ namespace GffCreator.Utilities
             List<MutableTranscript> transcripts)
         {
             var numTranscriptsUpdated = 0;
-            var numGenesUpdates       = 0;
+            var updatedGenes          = new HashSet<int>();
 
             foreach (MutableTranscript transcript in transcripts)
             {
@@ -86,10 +87,10 @@ namespace GffCreator.Utilities
                 }
 
                 if (updatedTranscript) numTranscriptsUpdated++;
-                if (updatedGene) numGenesUpdates++;
+                if (updatedGene) updatedGenes.Add(transcript.Gene.InternalGeneId);
             }
 
-            return (numTranscriptsUpdated, numGenesUpdates);
+            return (numTranscriptsUpdated, updatedGenes.Count);
         }
     }
 }
