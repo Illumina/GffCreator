@@ -1,6 +1,6 @@
 # GffCreator
 
-GffCreator is a standalone tool that creates a GTF (GFF v2) output file from a Nirvana transcript cache file.
+GffCreator is a standalone tool that creates a [GTF (GFF v2)](https://www.ensembl.org/info/website/upload/gff.html) output file from a Nirvana transcript cache file.
 
 ## Building
 
