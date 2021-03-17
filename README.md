@@ -21,9 +21,11 @@ dotnet build -c Release
 
 Using the paths to your Nirvana 3.2.3 cache and reference files, use the following command to create the GFF file:
 
-```bash
+```
 USAGE: GffCreator.dll <transcript source> <transcript cache path> <reference path> <output GFF path>
+```
 
+```bash
 dotnet bin/Release/net5.0/GffCreator.dll \
 	RefSeq \
 	Cache/26/GRCh37/RefSeq.transcripts.ndb \
