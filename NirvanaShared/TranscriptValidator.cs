@@ -9,5 +9,9 @@ namespace VariantAnnotation.Caches.Utilities
         public static void Validate(ISequenceProvider sequenceProvider, IChromosome chromosome, string transcriptId, bool geneOnReverseStrand, ITranscriptRegion[] transcriptRegions, IRnaEdit[] rnaEdits, ITranslation translation)
         {
         }
+
+        public static void CheckTranscriptRegions(string transcriptId, ITranscriptRegion[] transcriptRegions)
+        {
+        }
     }
 }
