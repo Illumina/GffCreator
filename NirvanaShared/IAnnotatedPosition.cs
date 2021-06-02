@@ -11,9 +11,11 @@ namespace VariantAnnotation.Interface.AnnotatedPositions
 
     public interface IPosition
     {
-        IChromosome Chromosome { get; set; }
-        int         Start      { get; set; }
-        int         End        { get; set; }
+        IChromosome Chromosome           { get; set; }
+        int         Start                { get; set; }
+        int         End                  { get; set; }
+        bool        HasStructuralVariant { get; }
+        bool        HasShortTandemRepeat { get; }
     }
     
     public interface IAnnotatedVariant

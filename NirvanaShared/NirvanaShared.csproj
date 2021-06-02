@@ -35,16 +35,24 @@
 		<Compile Include="..\Nirvana\Intervals\Interval.cs" Link="Intervals\Interval.cs" />
 		<Compile Include="..\Nirvana\Intervals\IntervalArray.cs" Link="Intervals\IntervalArray.cs" />
 		<Compile Include="..\Nirvana\Intervals\IntervalForest.cs" Link="Intervals\IntervalForest.cs" />
+		<Compile Include="..\Nirvana\Intervals\OverlapType.cs" Link="Intervals\OverlapType.cs" />
 		<Compile Include="..\Nirvana\Intervals\Utilities.cs" Link="Intervals\Utilities.cs" />
 		<Compile Include="..\Nirvana\IO\BufferedBinaryReader.cs" Link="IO\BufferedBinaryReader.cs" />
+		<Compile Include="..\Nirvana\IO\CacheConstants.cs" Link="IO\CacheConstants.cs" />
 		<Compile Include="..\Nirvana\IO\ExtendedBinaryReader.cs" Link="IO\ExtendedBinaryReader.cs" />
 		<Compile Include="..\Nirvana\IO\ExtendedBinaryWriter.cs" Link="IO\ExtendedBinaryWriter.cs" />
 		<Compile Include="..\Nirvana\IO\FileUtilities.cs" Link="IO\FileUtilities.cs" />
 		<Compile Include="..\Nirvana\IO\IBufferedBinaryReader.cs" Link="IO\IBufferedBinaryReader.cs" />
+		<Compile Include="..\Nirvana\IO\IConnect.cs" Link="IO\IConnect.cs" />
 		<Compile Include="..\Nirvana\IO\IExtendedBinaryWriter.cs" Link="IO\IExtendedBinaryWriter.cs" />
 		<Compile Include="..\Nirvana\IO\ISerializable.cs" Link="IO\ISerializable.cs" />
-		<Compile Include="..\Nirvana\IO\MemoryBufferBinaryReader.cs" Link="IO\MemoryBufferBinaryReader.cs" />
+		<Compile Include="..\Nirvana\IO\Logger.cs" Link="IO\Logger.cs" />
 		<Compile Include="..\Nirvana\IO\PersistentStream.cs" Link="IO\PersistentStream.cs" />
+		<Compile Include="..\Nirvana\ReferenceSequence\Common\IndexEntry.cs" Link="ReferenceSequence\IndexEntry.cs" />
+		<Compile Include="..\Nirvana\ReferenceSequence\Common\MaskedEntry.cs" Link="ReferenceSequence\MaskedEntry.cs" />
+		<Compile Include="..\Nirvana\ReferenceSequence\Common\Sequence.cs" Link="ReferenceSequence\Sequence.cs" />
+		<Compile Include="..\Nirvana\ReferenceSequence\ReferenceSequenceCommon.cs" Link="ReferenceSequence\ReferenceSequenceCommon.cs" />
+		<Compile Include="..\Nirvana\ReferenceSequence\IO\ReferenceSequenceReader.cs" Link="ReferenceSequence\ReferenceSequenceReader.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\AnnotatedPositions\Transcript\CompactId.cs" Link="VariantAnnotation\CompactId.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Caches\TranscriptCacheData.cs" Link="VariantAnnotation\TranscriptCacheData.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Caches\TranscriptCache.cs" Link="VariantAnnotation\TranscriptCache.cs" />
@@ -59,20 +67,12 @@
 		<Compile Include="..\Nirvana\VariantAnnotation\Caches\Utilities\ExonUtilities.cs" Link="VariantAnnotation\ExonUtilities.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\IO\JsonObject.cs" Link="VariantAnnotation\JsonObject.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\IO\IntervalExtensions.cs" Link="VariantAnnotation\IntervalExtensions.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\IO\Caches\CacheConstants.cs" Link="VariantAnnotation\CacheConstants.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\IO\Caches\CacheHeader.cs" Link="VariantAnnotation\CacheHeader.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\IO\Caches\Header.cs" Link="VariantAnnotation\Header.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\IO\Caches\TranscriptCacheCustomHeader.cs" Link="VariantAnnotation\TranscriptCacheCustomHeader.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\IO\Caches\TranscriptCacheReader.cs" Link="VariantAnnotation\TranscriptCacheReader.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Providers\DataSourceVersion.cs" Link="VariantAnnotation\DataSourceVersion.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Providers\ReferenceSequenceProvider.cs" Link="VariantAnnotation\ReferenceSequenceProvider.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\ChromosomeExtensions.cs" Link="VariantAnnotation\ChromosomeExtensions.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\CompressedSequence.cs" Link="VariantAnnotation\CompressedSequence.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\CompressionBlock.cs" Link="VariantAnnotation\CompressionBlock.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\IndexEntry.cs" Link="VariantAnnotation\IndexEntry.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\MaskedEntry.cs" Link="VariantAnnotation\MaskedEntry.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\ReferenceSequenceCommon.cs" Link="VariantAnnotation\ReferenceSequenceCommon.cs" />
-		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\ReferenceSequenceReader.cs" Link="VariantAnnotation\ReferenceSequenceReader.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Utilities\Date.cs" Link="VariantAnnotation\Date.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Utilities\FormatUtilities.cs" Link="VariantAnnotation\FormatUtilities.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation.Interface\AnnotatedPositions\BioType.cs" Link="VariantAnnotation.Interface\BioType.cs" />
@@ -93,9 +93,6 @@
 		<Compile Include="..\Nirvana\VariantAnnotation.Interface\Providers\ISequenceProvider.cs" Link="VariantAnnotation.Interface\ISequenceProvider.cs" />
 		<Compile Include="..\Nirvana\Variants\VariantType.cs" Link="Variants\VariantType.cs" />
 		<None Include="..\Nirvana\Compression\Packages\BlockCompression\BlockCompression.dll" Link="BlockCompression.dll">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Include="..\Nirvana\Compression\Packages\BlockCompression\BlockCompression.pdb" Link="BlockCompression.pdb">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Include="..\Nirvana\Compression\Packages\BlockCompression\libBlockCompression.so" Link="libBlockCompression.so">

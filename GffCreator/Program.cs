@@ -54,7 +54,7 @@ namespace GffCreator
             
             using (var reader = new TranscriptCacheReader(FileUtilities.GetReadStream(cachePath)))
             {
-                TranscriptCacheData cacheData = reader.Read(sequenceProvider, sequenceProvider.RefIndexToChromosome);
+                TranscriptCacheData cacheData = reader.Read(sequenceProvider.RefIndexToChromosome);
                 transcriptsByRef = cacheData.TranscriptIntervalArrays;
                 geneToInternalId = GeneUtilities.CreateDictionary(cacheData.Genes);
             }
