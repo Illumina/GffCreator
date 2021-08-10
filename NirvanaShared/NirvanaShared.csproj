@@ -45,6 +45,9 @@
 		<Compile Include="..\Nirvana\IO\ISerializable.cs" Link="IO\ISerializable.cs" />
 		<Compile Include="..\Nirvana\IO\MemoryBufferBinaryReader.cs" Link="IO\MemoryBufferBinaryReader.cs" />
 		<Compile Include="..\Nirvana\IO\PersistentStream.cs" Link="IO\PersistentStream.cs" />
+		<Compile Include="..\Nirvana\VariantAnnotation\AnnotatedPositions\AminoAcids\AminoAcidCommon.cs" Link="VariantAnnotation\AminoAcidCommon.cs" />
+		<Compile Include="..\Nirvana\VariantAnnotation\AnnotatedPositions\AminoAcids\AminoAcid.cs" Link="VariantAnnotation\AminoAcid.cs" />
+		<Compile Include="..\Nirvana\VariantAnnotation\AnnotatedPositions\AminoAcids\AminoAcidEntry.cs" Link="VariantAnnotation\AminoAcidEntry.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\AnnotatedPositions\Transcript\CompactId.cs" Link="VariantAnnotation\CompactId.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Caches\TranscriptCacheData.cs" Link="VariantAnnotation\TranscriptCacheData.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Caches\TranscriptCache.cs" Link="VariantAnnotation\TranscriptCache.cs" />
@@ -75,6 +78,7 @@
 		<Compile Include="..\Nirvana\VariantAnnotation\Sequence\ReferenceSequenceReader.cs" Link="VariantAnnotation\ReferenceSequenceReader.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Utilities\Date.cs" Link="VariantAnnotation\Date.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation\Utilities\FormatUtilities.cs" Link="VariantAnnotation\FormatUtilities.cs" />
+		<Compile Include="..\Nirvana\VariantAnnotation.Interface\AnnotatedPositions\AminoAcidEdit.cs" Link="VariantAnnotation.Interface\AminoAcidEdit.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation.Interface\AnnotatedPositions\BioType.cs" Link="VariantAnnotation.Interface\BioType.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation.Interface\AnnotatedPositions\ICodingRegion.cs" Link="VariantAnnotation.Interface\ICodingRegion.cs" />
 		<Compile Include="..\Nirvana\VariantAnnotation.Interface\AnnotatedPositions\ICompactId.cs" Link="VariantAnnotation.Interface\ICompactId.cs" />
