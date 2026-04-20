@@ -2,6 +2,7 @@
 
 GffCreator is a standalone tool that creates a [GTF (GFF v2)](https://www.ensembl.org/info/website/upload/gff.html) output file from a Nirvana transcript cache file.
 
+GffCreator is licensed under [PolyForm Strict License 1.0.0](https://github.com/Illumina/GffCreator/blob/main/LICENSE) 
 ## Building
 
 Remember to clone the git repo using the recursive option - this will automatically handle the Nirvana submodule:
